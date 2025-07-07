@@ -18,6 +18,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import CloseIcon from '@mui/icons-material/Close';
 import PersonIcon from '@mui/icons-material/Person';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
+import { GoogleGenerativeAI } from '@google/generative-ai'; // ✅ Gemini SDK
 
 interface Message {
   text: string;
@@ -31,7 +32,9 @@ const LegalChatbot: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
+
   const API_KEY = process.env.REACT_APP_GEMINI_API_KEY || '';
+  const genAI = new GoogleGenerativeAI(API_KEY); // ✅ Init Gemini
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -55,68 +58,33 @@ const LegalChatbot: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: `You are Saarthi, a helpful legal assistant chatbot for the LawWise website. You should always identify yourself as Saarthi in your responses. The website offers document analysis and legal assistance services. Answer the following question in a helpful and professional manner. If the question is about legal matters, provide accurate information and cite relevant laws or regulations when possible. If the question is about the website's functionality, explain the features clearly. Do not use asterisks or markdown formatting in your response.
+      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-User question: ${input}
+      const prompt = `You are Saarthi, a helpful legal assistant chatbot for the LawMittr website. You should always identify yourself as Saarthi in your responses. The website offers document analysis and legal assistance services.
 
-Please provide a clear and concise response without any special formatting characters.`
-              }]
-            }],
-            generationConfig: {
-              temperature: 0.7,
-              topK: 40,
-              topP: 0.95,
-              maxOutputTokens: 500,
-            }
-          })
-        }
-      );
+Answer this user question in a helpful, professional, and simple way, ideally in clear points or short paragraphs. No markdown formatting, no asterisks.
 
-      if (!response.ok) {
-        throw new Error('Failed to get response');
-      }
+User question: ${input}`;
 
-      const data = await response.json();
-      const botResponse = data.candidates[0].content.parts[0].text.replace(/\*/g, '');
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const botText = response.text().replace(/\*/g, '').trim();
 
       const botMessage: Message = {
-        text: botResponse.trim(),
+        text: botText,
         sender: 'bot',
         timestamp: new Date(),
       };
 
       setMessages(prev => [...prev, botMessage]);
     } catch (error: any) {
-      let errorText = 'I apologize, but I encountered an error. Please try again.';
-      if (error instanceof Error) {
-        errorText += `\nDetails: ${error.message}`;
-      }
-      // Try to parse API error details if available
-      if (error && error.response) {
-        try {
-          const errData = await error.response.json();
-          if (errData && errData.error && errData.error.message) {
-            errorText += `\nAPI Error: ${errData.error.message}`;
-          }
-        } catch {}
-      }
       const errorMessage: Message = {
-        text: errorText,
+        text: `Saarthi encountered an error. Please try again.\nDetails: ${error.message || 'Unknown error'}`,
         sender: 'bot',
         timestamp: new Date(),
       };
       setMessages(prev => [...prev, errorMessage]);
-      console.error('Chat error:', error);
+      console.error('Gemini error:', error);
     } finally {
       setIsLoading(false);
     }
@@ -131,11 +99,6 @@ Please provide a clear and concise response without any special formatting chara
 
   return (
     <>
-      {/* 
-      <Box mt={2}>
-        <Blogs />
-      </Box>
-      */}
       <Fab
         color="primary"
         aria-label="chat"
