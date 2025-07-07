@@ -7,7 +7,6 @@ import {
   Typography,
   List,
   ListItem,
-  ListItemText,
   CircularProgress,
   Fab,
   Collapse,
@@ -18,7 +17,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import CloseIcon from '@mui/icons-material/Close';
 import PersonIcon from '@mui/icons-material/Person';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
-import { GoogleGenerativeAI } from '@google/generative-ai'; // ✅ Gemini SDK
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 interface Message {
   text: string;
@@ -26,15 +25,15 @@ interface Message {
   timestamp: Date;
 }
 
+// ✅ Directly using Gemini API key
+const genAI = new GoogleGenerativeAI("AIzaSyDhyuXj2KLCclCsN_-yDr0NuOOLIRQQnls");
+
 const LegalChatbot: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
-
-  const API_KEY = process.env.REACT_APP_GEMINI_API_KEY || '';
-  const genAI = new GoogleGenerativeAI(API_KEY); // ✅ Init Gemini
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -60,7 +59,7 @@ const LegalChatbot: React.FC = () => {
     try {
       const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-      const prompt = `You are Saarthi, a helpful legal assistant chatbot for the LawMittr website. You should always identify yourself as Saarthi in your responses. The website offers document analysis and legal assistance services.
+      const prompt = `You are Saarthi, a helpful legal assistant chatbot for the LawWise website. You should always identify yourself as Saarthi in your responses. The website offers document analysis and legal assistance services.
 
 Answer this user question in a helpful, professional, and simple way, ideally in clear points or short paragraphs. No markdown formatting, no asterisks.
 
