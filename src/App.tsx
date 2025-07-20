@@ -160,9 +160,9 @@ function App() {
                 <Route
                   path="/book-appointment"
                   element={
-                    <ProtectedRoute>
+                    
                       <BookAppointment />
-                    </ProtectedRoute>
+                    
                   }
                 />
               </Routes>
