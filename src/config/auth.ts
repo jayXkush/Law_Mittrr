@@ -1,4 +1,4 @@
 export const authConfig = {
-  googleClientId: process.env.REACT_APP_GOOGLE_CLIENT_ID || '',
-  facebookAppId: process.env.REACT_APP_FACEBOOK_APP_ID || 'YOUR_FACEBOOK_APP_ID',
+  googleClientId: '163270679803-kh851lhhf79cph97thm9u48hoomrom3i.apps.googleusercontent.com',
+  facebookAppId: 'YOUR_FACEBOOK_APP_ID',
 };
