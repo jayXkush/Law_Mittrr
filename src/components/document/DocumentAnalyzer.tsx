@@ -71,8 +71,9 @@ const DocumentAnalyzer = () => {
       setOcrText(extractedText);
       // Gemini summary
       const model = genAI.getGenerativeModel({
-        model: "gemini-1.5-pro"
+        model: "gemini-1.0-pro"
       });
+
       const prompt = `You are a legal expert AI. Read the following extracted text from a legal document image, and generate a detailed, well-structured, and elongated summary. Your summary should:
 - Be easy for a layperson to understand
 - Organize information into logical sections with clear headings
