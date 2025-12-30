@@ -57,7 +57,10 @@ const LegalChatbot: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+      const model = genAI.getGenerativeModel({
+        model: "gemini-1.5-pro"
+      });
+
 
       const prompt = `You are Saarthi, a helpful legal assistant chatbot for the LawMittr website. You should always identify yourself as Saarthi in your responses. The website offers document analysis and legal assistance services.
 
