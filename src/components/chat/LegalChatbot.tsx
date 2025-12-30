@@ -26,7 +26,7 @@ interface Message {
 }
 
 // ✅ Directly using Gemini API key
-const genAI = new GoogleGenerativeAI("AIzaSyDhyuXj2KLCclCsN_-yDr0NuOOLIRQQnls");
+const genAI = new GoogleGenerativeAI("AIzaSyCB3ExHO-A2RzD8a2ntG8NyR3VHCcORATU");
 
 const LegalChatbot: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
