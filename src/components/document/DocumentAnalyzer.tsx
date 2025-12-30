@@ -15,7 +15,7 @@ import Tesseract from 'tesseract.js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Initialize Gemini
-const genAI = new GoogleGenerativeAI("AIzaSyDhyuXj2KLCclCsN_-yDr0NuOOLIRQQnls");
+const genAI = new GoogleGenerativeAI("AIzaSyCB3ExHO-A2RzD8a2ntG8NyR3VHCcORATU");
 
 const DocumentAnalyzer = () => {
   const [file, setFile] = useState<File | null>(null);
